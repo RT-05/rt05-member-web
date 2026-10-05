@@ -10,15 +10,12 @@
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #0f172a; /* Warna latar belakang luar yang modern gelap */
+            background-color: #0f172a;
             overscroll-behavior-y: none;
         }
-        
-        /* Custom scrollbar tipis ala aplikasi chat profesional */
         .chat-scroll::-webkit-scrollbar { width: 3px; }
         .chat-scroll::-webkit-scrollbar-track { background: transparent; }
         .chat-scroll::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.3); border-radius: 10px; }
-        
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -33,48 +30,43 @@
             85% { top: 20px; opacity: 1; transform: translateX(-50%) scale(1); }
             100% { top: -60px; opacity: 0; transform: translateX(-50%) scale(0.9); }
         }
-        
         .animate-slide-up { animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
         .glass { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        
         * { -webkit-tap-highlight-color: transparent; outline: none !important; }
     </style>
 </head>
 <body class="h-[100dvh] w-screen overflow-hidden flex items-center justify-center p-0 md:p-4">
 
-    <!-- GLOBAL LOADING OVERLAY -->
-    <div id="global-loading" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="w-12 h-12 border-3 border-gray-100 border-t-blue-500 rounded-full animate-spin mb-4 shadow-sm"></div>
-        <p class="text-gray-500 font-medium text-sm animate-pulse tracking-wide">Menghubungkan ke Server...</p>
+    <!-- Loading Screen -->
+    <div id="global-loading" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center transition-opacity duration-300">
+        <div class="w-10 h-10 border-3 border-gray-100 border-t-blue-500 rounded-full animate-spin mb-3 shadow-sm"></div>
+        <p class="text-gray-500 font-medium text-xs animate-pulse tracking-wide">Menghubungkan ke Cloud RT-05...</p>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 bg-gray-900/95 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium z-[200] pointer-events-none border border-white/10" style="top: -60px; opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 bg-gray-900/95 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium z-[300] pointer-events-none border border-white/10" style="top: -60px; opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
         Pesan Notifikasi
     </div>
 
-    <!-- MAIN APP CONTAINER (RESPONSIVE FULL SCREEN DI HP, FRAME DI LAPTOP) -->
+    <!-- Main App Container -->
     <div class="w-full h-[100dvh] md:h-[88vh] md:w-[420px] bg-white md:rounded-[40px] md:shadow-2xl md:border-[8px] md:border-gray-900 flex flex-col relative overflow-hidden transition-all duration-300">
         
-        <!-- FAKE NOTCH UNTUK DESKTOP -->
+        <!-- FAKE NOTCH FOR DESKTOP PREVIEW -->
         <div class="hidden md:flex absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-[150] justify-center items-center gap-2">
             <div class="w-10 h-1 bg-gray-800 rounded-full"></div>
             <div class="w-2 h-2 bg-gray-800 rounded-full"></div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- SCREEN 1: LOGIN (KODE AKSES) -->
-        <!-- ========================================== -->
-        <div id="login-screen" class="absolute inset-0 z-50 bg-white flex flex-col justify-center items-center p-6 sm:p-8 transition-transform duration-500 ease-in-out">
+        <!-- LOGIN SCREEN -->
+        <div id="login-screen" class="absolute inset-0 z-50 bg-white flex flex-col justify-center items-center p-6 sm:p-8 transition-transform duration-300 ease-in-out">
             <div class="absolute top-[-40px] right-[-40px] w-64 h-64 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
 
             <div class="w-20 h-20 bg-gradient-to-tr from-[#833ab4] via-[#fd1d1d] to-[#fcb045] rounded-3xl shadow-lg flex items-center justify-center mb-6 z-10">
-                <i class="fa-solid fa-users text-white text-4xl"></i>
+                <i class="fa-solid fa-cloud text-white text-4xl"></i>
             </div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-1.5 z-10 tracking-tight">RT-05 Portal</h1>
-            <p class="text-gray-500 text-xs sm:text-sm text-center mb-8 z-10 font-medium">Masukkan nama dan kode akses kelompok untuk bergabung.</p>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1.5 z-10 tracking-tight">RT-05 Cloud Portal</h1>
+            <p class="text-gray-500 text-xs sm:text-sm text-center mb-8 z-10 font-medium">Masukkan nama dan kode akses kelompok.</p>
             
             <div class="w-full space-y-3.5 z-10 max-w-sm">
                 <div class="relative">
@@ -87,7 +79,7 @@
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="fa-solid fa-key text-gray-400 text-sm"></i>
                     </div>
-                    <input type="password" id="input-passcode" placeholder="Kode Akses (cth: INFORMATIKA05)" class="w-full pl-11 pr-4 py-3.5 bg-gray-50 rounded-2xl border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/10 transition-all text-sm font-semibold placeholder-gray-400">
+                    <input type="password" id="input-passcode" placeholder="Kode Akses Obrolan" class="w-full pl-11 pr-4 py-3.5 bg-gray-50 rounded-2xl border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/10 transition-all text-sm font-semibold placeholder-gray-400">
                 </div>
                 <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-md transition-all flex justify-center items-center gap-2 text-sm mt-2">
                     Masuk Ruang Chat <i class="fa-solid fa-arrow-right"></i>
@@ -95,12 +87,9 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- SCREEN 2: CHAT ROOM -->
-        <!-- ========================================== -->
-        <div id="chat-screen" class="absolute inset-0 flex flex-col bg-slate-50 translate-x-full transition-transform duration-500 ease-in-out">
-            
-            <!-- HEADER CHAT (Responsif & Rapi) -->
+        <!-- CHAT SCREEN -->
+        <div id="chat-screen" class="absolute inset-0 flex flex-col bg-slate-50 translate-x-full transition-transform duration-300 ease-in-out">
+            <!-- HEADER -->
             <header class="glass text-gray-900 px-3.5 py-2.5 sm:px-4 sm:py-3 flex items-center border-b border-gray-200/80 z-20 sticky top-0 md:pt-7">
                 <button id="btn-logout" class="p-2 -ml-2 mr-1 text-blue-600 hover:bg-blue-50 rounded-full transition-all active:scale-90">
                     <i class="fa-solid fa-chevron-left text-lg"></i>
@@ -111,7 +100,7 @@
                 <div class="flex-1 flex flex-col justify-center min-w-0">
                     <h2 class="font-bold text-sm sm:text-[15px] leading-tight text-gray-900 truncate">Grup RT-05</h2>
                     <p class="text-[11px] text-gray-500 font-medium flex items-center gap-1.5 truncate">
-                        <span id="user-display-name" class="truncate">Aktif</span>
+                        <span id="user-display-name" class="truncate">Aktif Tersambung</span>
                         <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0"></span>
                     </p>
                 </div>
@@ -120,19 +109,16 @@
                 </button>
             </header>
 
-            <!-- AREA PESAN -->
+            <!-- CHAT MAIN AREA -->
             <div class="flex-1 relative overflow-hidden flex flex-col">
-                <div id="chat-wallpaper" class="absolute inset-0 bg-cover bg-center z-0 opacity-0 transition-opacity duration-700"></div>
+                <div id="chat-wallpaper" class="absolute inset-0 bg-cover bg-center z-0 opacity-0 transition-opacity duration-500"></div>
                 <div id="chat-wallpaper-overlay" class="absolute inset-0 bg-white/75 z-0 hidden"></div>
-                
                 <main id="chat-box" class="flex-1 chat-scroll overflow-y-auto px-3.5 py-4 sm:p-4 flex flex-col space-y-3 z-10 relative">
-                    <!-- Pesan masuk dinamis -->
                 </main>
             </div>
 
-            <!-- FOOTER INPUT (Fixed & Nyaman di HP) -->
+            <!-- FOOTER INPUT -->
             <footer class="glass px-3 py-2 sm:px-4 sm:py-3 flex flex-col gap-2 border-t border-gray-200/80 z-20" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));">
-                <!-- Preview Gambar -->
                 <div id="image-preview-container" class="hidden relative p-1.5 bg-white rounded-2xl w-max shadow-sm border border-gray-200 animate-slide-up">
                     <img id="image-preview" class="h-20 sm:h-24 w-auto rounded-xl object-cover">
                     <button id="btn-remove-image" class="absolute -top-2 -right-2 bg-gray-900 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow hover:bg-red-500 transition-all">
@@ -142,12 +128,11 @@
 
                 <div class="flex items-end gap-2">
                     <input type="file" id="input-image" accept="image/*" class="hidden">
-                    
                     <button id="btn-attach" class="w-10 h-10 bg-blue-600 hover:bg-blue-700 active:scale-90 text-white rounded-full transition-all flex items-center justify-center flex-shrink-0 mb-0.5 shadow-sm">
                         <i class="fa-solid fa-camera text-sm"></i>
                     </button>
                     
-                    <div class="flex-1 bg-white rounded-[22px] flex items-end px-3.5 py-1.5 border border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
+                    <div class="flex-1 bg-white rounded-[22px] flex items-end px-3.5 py-1.5 border border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/25 focus-within:border-blue-500 transition-all">
                         <textarea id="input-message" rows="1" placeholder="Ketik pesan..." class="w-full py-2 outline-none resize-none bg-transparent max-h-28 chat-scroll text-sm font-medium placeholder-gray-400"></textarea>
                         <button id="btn-send" disabled class="p-2 text-blue-600 hover:text-blue-700 font-bold text-sm transition-colors mb-0.5 rounded-full disabled:opacity-30 active:scale-90">
                             Kirim
@@ -157,14 +142,10 @@
             </footer>
         </div>
 
-        <!-- ========================================== -->
-        <!-- SCREEN 3: SETTINGS MODAL (ADMIN) -->
-        <!-- ========================================== -->
-        <div id="settings-modal" class="absolute inset-0 z-[100] bg-gray-950/60 backdrop-blur-sm hidden flex-col items-center justify-end md:justify-center opacity-0 transition-opacity duration-300">
-            <div id="settings-card" class="bg-white w-full md:w-[90%] rounded-t-[32px] md:rounded-[32px] p-6 shadow-2xl transform translate-y-full transition-transform duration-500 ease-out max-h-[88vh] overflow-y-auto chat-scroll">
-                
+        <!-- SETTINGS MODAL -->
+        <div id="settings-modal" class="absolute inset-0 z-[100] bg-gray-950/60 backdrop-blur-sm hidden flex-col items-center justify-end md:justify-center opacity-0 transition-opacity duration-200">
+            <div id="settings-card" class="bg-white w-full md:w-[90%] rounded-t-[32px] md:rounded-[32px] p-6 shadow-2xl transform translate-y-full transition-transform duration-300 ease-out max-h-[88vh] overflow-y-auto chat-scroll">
                 <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-5 md:hidden"></div>
-
                 <div class="flex justify-between items-center mb-5">
                     <h3 class="text-lg font-bold text-gray-900">Pengaturan Admin</h3>
                     <button id="btn-close-settings" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 active:scale-90 transition-all">
@@ -174,11 +155,9 @@
 
                 <div class="space-y-5 text-sm">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Ubah Kode Akses Obrolan</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Ubah Kode Akses</label>
                         <input type="text" id="setting-passcode" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                        <p class="text-[11px] text-gray-400 mt-1">*Anggota lain wajib mengetahui kode baru untuk bergabung.</p>
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Wallpaper Latar Belakang</label>
                         <div class="flex gap-2 mb-2.5">
@@ -192,9 +171,7 @@
                         </div>
                         <img id="setting-wallpaper-preview" class="w-full h-28 object-cover rounded-xl border border-gray-200 hidden shadow-sm">
                     </div>
-
                     <hr class="border-gray-100">
-
                     <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                             <i class="fa-solid fa-shield-halved text-blue-600"></i> PIN Keamanan Admin
@@ -202,7 +179,6 @@
                         <input type="password" id="setting-admin-pin" placeholder="Masukkan PIN..." class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold tracking-widest focus:ring-2 focus:ring-blue-500 outline-none transition-all text-center">
                         <p class="text-[11px] text-gray-500 mt-1.5 text-center">Default PIN: <span class="font-bold">ADMIN05</span></p>
                     </div>
-
                     <button id="btn-save-settings" class="w-full bg-gray-900 hover:bg-black active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-md transition-all">
                         Simpan Perubahan
                     </button>
@@ -212,42 +188,41 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'rt05-app-default';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "dummy", authDomain: "dummy", projectId: "dummy"
+        // Konfigurasi Firebase Resmi Milikmu
+        const firebaseConfig = {
+            apiKey: "AIzaSyDu7znSan_sxeS8poDo9jbLOo_b6eghzA8",
+            authDomain: "rt05-database.firebaseapp.com",
+            projectId: "rt05-database",
+            storageBucket: "rt05-database.firebasestorage.app",
+            messagingSenderId: "1043400887136",
+            appId: "1:1043400887136:web:3798f471aa84bb9d9e2c05",
+            measurementId: "G-7WQNB60TBS"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
+        let app, db, auth, currentUser = null;
         const ADMIN_PIN = "ADMIN05";
-
-        let currentUser = null;
+        
         let userName = "";
         let selectedImageBase64 = null;
-        let messagesUnsubscribe = null;
-        let configUnsubscribe = null;
-        
-        let currentGroupPasscode = "INFORMATIKA05"; 
-        let currentWallpaper = "";
         let pendingWallpaperBase64 = null; 
+        let currentGroupPasscode = "INFORMATIKA05";
+        let currentWallpaper = "";
+        let messagesData = [];
 
+        // UI Elements
         const globalLoading = document.getElementById('global-loading');
         const loginScreen = document.getElementById('login-screen');
         const chatScreen = document.getElementById('chat-screen');
         const chatWallpaper = document.getElementById('chat-wallpaper');
         const chatWallpaperOverlay = document.getElementById('chat-wallpaper-overlay');
-        
         const inputName = document.getElementById('input-name');
         const inputPasscode = document.getElementById('input-passcode');
         const btnLogin = document.getElementById('btn-login');
         const btnLogout = document.getElementById('btn-logout');
-        
         const chatBox = document.getElementById('chat-box');
         const inputMessage = document.getElementById('input-message');
         const btnSend = document.getElementById('btn-send');
@@ -258,20 +233,6 @@
         const btnRemoveImage = document.getElementById('btn-remove-image');
         const userDisplayName = document.getElementById('user-display-name');
 
-        const btnSettings = document.getElementById('btn-settings');
-        const settingsModal = document.getElementById('settings-modal');
-        const settingsCard = document.getElementById('settings-card');
-        const btnCloseSettings = document.getElementById('btn-close-settings');
-        const settingPasscode = document.getElementById('setting-passcode');
-        const settingWallpaperFile = document.getElementById('setting-wallpaper-file');
-        const btnUploadWallpaper = document.getElementById('btn-upload-wallpaper');
-        const btnClearWallpaper = document.getElementById('btn-clear-wallpaper');
-        const settingWallpaperPreview = document.getElementById('setting-wallpaper-preview');
-        const settingAdminPin = document.getElementById('setting-admin-pin');
-        const btnSaveSettings = document.getElementById('btn-save-settings');
-
-        const configRef = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'group_settings');
-
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
             toast.innerText = message;
@@ -281,6 +242,84 @@
             toast.style.animation = 'toastSlide 3s forwards';
         }
 
+        async function initFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                await signInAnonymously(auth);
+                currentUser = auth.currentUser;
+
+                // Listener Pengaturan
+                const settingsRef = doc(db, 'rt05_settings', 'config');
+                onSnapshot(settingsRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.passcode) currentGroupPasscode = data.passcode;
+                        if (data.wallpaper !== undefined) currentWallpaper = data.wallpaper;
+                        updateWallpaperUI();
+                    }
+                }, (err) => console.log("Settings listener warning:", err));
+
+                // Listener Chat Real-time
+                const messagesRef = collection(db, 'rt05_messages');
+                onSnapshot(messagesRef, (snapshot) => {
+                    messagesData = [];
+                    snapshot.forEach((d) => {
+                        messagesData.push({ id: d.id, ...d.data() });
+                    });
+                    messagesData.sort((a, b) => a.time - b.time);
+                    renderMessages();
+                }, (err) => console.log("Messages listener warning:", err));
+
+            } catch (e) {
+                console.warn("Firebase Init Error:", e);
+            } finally {
+                if (globalLoading) {
+                    globalLoading.style.opacity = '0';
+                    setTimeout(() => globalLoading.classList.add('hidden'), 300);
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initFirebase);
+
+        function updateWallpaperUI() {
+            if (currentWallpaper) {
+                chatWallpaper.style.backgroundImage = `url('${currentWallpaper}')`;
+                chatWallpaper.style.opacity = '1';
+                chatWallpaperOverlay.classList.remove('hidden');
+            } else {
+                chatWallpaper.style.backgroundImage = "none";
+                chatWallpaper.style.opacity = '0';
+                chatWallpaperOverlay.classList.add('hidden');
+            }
+        }
+
+        btnLogin.addEventListener('click', () => {
+            const name = inputName.value.trim();
+            const code = inputPasscode.value.trim();
+            if (!name) return showToast("Nama panggilan harus diisi!", true);
+            if (!code) return showToast("Kode akses kosong!", true);
+            if (code !== currentGroupPasscode) return showToast("Kode akses salah!", true);
+
+            userName = name;
+            inputName.value = "";
+            inputPasscode.value = "";
+            loginScreen.style.transform = 'translateX(-100%)';
+            chatScreen.style.transform = 'translateX(0)';
+            userDisplayName.innerText = `Masuk sebagai ${name}`;
+            showToast(`Selamat datang di grup, ${name}!`);
+            scrollToBottom();
+        });
+
+        btnLogout.addEventListener('click', () => {
+            userName = "";
+            chatScreen.style.transform = 'translateX(100%)';
+            loginScreen.style.transform = 'translateX(0)';
+        });
+
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -289,104 +328,17 @@
                 img.src = event.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 700;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height && width > MAX_SIZE) { 
-                        height *= MAX_SIZE / width; width = MAX_SIZE; 
-                    } else if (height > MAX_SIZE) { 
-                        width *= MAX_SIZE / height; height = MAX_SIZE; 
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
+                    const MAX_SIZE = 500;
+                    let width = img.width, height = img.height;
+                    if (width > height && width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                    else if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                    canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.55));
+                    callback(canvas.toDataURL('image/jpeg', 0.45));
                 };
             };
         }
-
-        async function initApp() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined') {
-                    try {
-                        const userCred = await signInWithCustomToken(auth, __initial_auth_token);
-                        currentUser = userCred.user;
-                    } catch (e) {
-                        const userCred = await signInAnonymously(auth);
-                        currentUser = userCred.user;
-                    }
-                } else {
-                    const userCred = await signInAnonymously(auth);
-                    currentUser = userCred.user;
-                }
-                
-                if(!currentUser) throw new Error("Gagal menginisiasi identitas.");
-
-                configUnsubscribe = onSnapshot(configRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        currentGroupPasscode = data.passcode || "INFORMATIKA05";
-                        currentWallpaper = data.wallpaper || "";
-                        
-                        if (currentWallpaper) {
-                            chatWallpaper.style.backgroundImage = `url('${currentWallpaper}')`;
-                            chatWallpaper.style.opacity = '1';
-                            chatWallpaperOverlay.classList.remove('hidden');
-                        } else {
-                            chatWallpaper.style.backgroundImage = "none";
-                            chatWallpaper.style.opacity = '0';
-                            chatWallpaperOverlay.classList.add('hidden');
-                        }
-                    }
-                }, (err) => console.error(err));
-
-                setTimeout(() => {
-                    globalLoading.style.opacity = '0';
-                    setTimeout(() => globalLoading.classList.add('hidden'), 400);
-                }, 400);
-
-            } catch (error) {
-                console.error(error);
-                globalLoading.querySelector('p').innerText = "Gagal terhubung. Refresh halaman.";
-                globalLoading.querySelector('p').classList.replace('text-gray-500', 'text-red-500');
-            }
-        }
-
-        initApp();
-
-        btnLogin.addEventListener('click', () => {
-            const name = inputName.value.trim();
-            const code = inputPasscode.value.trim();
-
-            if (!name) return showToast("Nama panggilan harus diisi!", true);
-            if (!code) return showToast("Kode akses kosong!", true);
-            if (code !== currentGroupPasscode) return showToast("Kode akses salah!", true);
-
-            userName = name;
-            inputName.value = "";
-            inputPasscode.value = "";
-            
-            loginScreen.style.transform = 'translateX(-100%)';
-            chatScreen.style.transform = 'translateX(0)';
-            userDisplayName.innerText = `Masuk sebagai ${name}`;
-            
-            showToast(`Selamat datang, ${name}!`);
-            loadMessages();
-        });
-
-        btnLogout.addEventListener('click', () => {
-            if(messagesUnsubscribe) {
-                messagesUnsubscribe();
-                messagesUnsubscribe = null;
-            }
-            userName = "";
-            chatScreen.style.transform = 'translateX(100%)';
-            loginScreen.style.transform = 'translateX(0)';
-            setTimeout(() => { chatBox.innerHTML = ""; }, 400);
-        });
 
         btnAttach.addEventListener('click', () => inputImage.click());
         inputImage.addEventListener('change', (e) => {
@@ -415,14 +367,16 @@
 
         async function sendMessage() {
             const text = inputMessage.value.trim();
-            if (!text && !selectedImageBase64) return;
-            if (!currentUser || !userName) return;
+            if ((!text && !selectedImageBase64)) return;
 
-            const msgText = text;
-            const imgData = selectedImageBase64;
-            const senderId = currentUser.uid;
-            const senderName = userName;
-            
+            const newMsg = {
+                text: text,
+                imageUrl: selectedImageBase64,
+                senderId: currentUser ? currentUser.uid : 'anon-' + Date.now(),
+                senderName: userName,
+                time: Date.now()
+            };
+
             inputMessage.value = "";
             inputMessage.style.height = 'auto';
             selectedImageBase64 = null;
@@ -431,96 +385,53 @@
             btnSend.disabled = true;
 
             try {
-                const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages');
-                await addDoc(messagesRef, {
-                    text: msgText,
-                    imageUrl: imgData,
-                    senderId: senderId,
-                    senderName: senderName,
-                    timestamp: serverTimestamp()
-                });
-            } catch (error) {
-                console.error(error);
-                showToast("Gagal mengirim pesan.", true);
+                if (db) {
+                    await addDoc(collection(db, 'rt05_messages'), newMsg);
+                } else {
+                    showToast("Database tidak terhubung.", true);
+                }
+            } catch (err) {
+                showToast("Gagal mengirim pesan. Cek izin database.", true);
             }
         }
 
         btnSend.addEventListener('click', sendMessage);
         inputMessage.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
         });
 
-        function loadMessages() {
-            if (!currentUser) return;
-            const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages');
-            const q = query(messagesRef);
-
-            messagesUnsubscribe = onSnapshot(q, (snapshot) => {
-                let messages = [];
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    messages.push({
-                        id: doc.id,
-                        ...data,
-                        time: data.timestamp ? data.timestamp.toMillis() : Date.now()
-                    });
-                });
-                messages.sort((a, b) => a.time - b.time);
-                renderMessages(messages);
-            }, (error) => console.error(error));
-        }
-
-        function renderMessages(messages) {
+        function renderMessages() {
             chatBox.innerHTML = `
                 <div class="flex justify-center my-4">
                     <span class="glass px-3.5 py-1 rounded-full text-gray-500 text-[10px] font-bold tracking-wider shadow-sm border border-gray-200/60">
-                        <i class="fa-solid fa-lock mr-1"></i> OBROLAN AMAN RT-05
+                        <i class="fa-solid fa-cloud mr-1 text-emerald-500"></i> TERSAMBUNG KE CLOUD DATABASE
                     </span>
                 </div>`;
-
             let lastDate = "";
-
-            messages.forEach((msg) => {
-                const isMe = msg.senderId === currentUser.uid;
+            messagesData.forEach((msg) => {
+                const isMe = currentUser && msg.senderId === currentUser.uid;
                 const dateObj = new Date(msg.time);
                 const timeStr = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
                 const dateStr = dateObj.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
                 
                 if (dateStr !== lastDate) {
-                    chatBox.innerHTML += `
-                        <div class="flex justify-center my-4 animate-pop-in">
-                            <span class="bg-gray-200/90 text-gray-600 px-3 py-0.5 rounded-full text-[10px] font-bold shadow-xs">
-                                ${dateStr}
-                            </span>
-                        </div>`;
+                    chatBox.innerHTML += `<div class="flex justify-center my-4 animate-pop-in"><span class="bg-gray-200/90 text-gray-600 px-3 py-0.5 rounded-full text-[10px] font-bold shadow-xs">${dateStr}</span></div>`;
                     lastDate = dateStr;
                 }
 
                 const imgHtml = msg.imageUrl ? `<img src="${msg.imageUrl}" class="rounded-xl w-full max-w-[220px] h-auto mb-1.5 object-cover">` : "";
                 const textHtml = msg.text ? `<p class="text-[14px] leading-relaxed break-words whitespace-pre-wrap">${msg.text.replace(/</g, "&lt;")}</p>` : "";
                 const nameLabel = !isMe ? `<div class="text-[11px] text-gray-500 ml-2 mb-0.5 font-semibold">${msg.senderName}</div>` : "";
-                
-                const bubbleStyle = isMe 
-                    ? "bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-[20px] rounded-br-xs shadow-sm"
-                    : "bg-white border border-gray-200/90 text-gray-800 rounded-[20px] rounded-bl-xs shadow-sm";
-                
+                const bubbleStyle = isMe ? "bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-[20px] rounded-br-xs" : "bg-white border border-gray-200/90 text-gray-800 rounded-[20px] rounded-bl-xs";
                 const timeColor = isMe ? "text-blue-100" : "text-gray-400";
-                const checkIcon = isMe ? `<i class="fa-solid fa-check-double text-[9px] ml-1 opacity-80"></i>` : "";
-
+                
                 chatBox.innerHTML += `
                     <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'} mb-2.5">
                         <div class="flex flex-col max-w-[80%] sm:max-w-[70%] animate-pop-in">
                             ${nameLabel}
-                            <div class="${bubbleStyle} p-3 px-3.5 inline-block w-fit relative group">
-                                ${imgHtml}
-                                ${textHtml}
-                                <div class="flex justify-end items-center mt-1 space-x-1">
-                                    <span class="text-[9px] font-medium ${timeColor}">${timeStr}</span>
-                                    ${checkIcon}
-                                </div>
+                            <div class="${bubbleStyle} p-3 px-3.5 inline-block w-fit relative group shadow-sm">
+                                ${imgHtml}${textHtml}
+                                <div class="flex justify-end items-center mt-1 space-x-1"><span class="text-[9px] font-medium ${timeColor}">${timeStr}</span></div>
                             </div>
                         </div>
                     </div>`;
@@ -528,43 +439,24 @@
             scrollToBottom();
         }
 
-        function scrollToBottom() {
-            setTimeout(() => {
-                chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
-            }, 50);
-        }
+        function scrollToBottom() { setTimeout(() => { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }, 30); }
 
-        function openSettings() {
+        const btnSettings = document.getElementById('btn-settings'), settingsModal = document.getElementById('settings-modal'), settingsCard = document.getElementById('settings-card'), btnCloseSettings = document.getElementById('btn-close-settings'), settingPasscode = document.getElementById('setting-passcode'), settingWallpaperFile = document.getElementById('setting-wallpaper-file'), btnUploadWallpaper = document.getElementById('btn-upload-wallpaper'), btnClearWallpaper = document.getElementById('btn-clear-wallpaper'), settingWallpaperPreview = document.getElementById('setting-wallpaper-preview'), settingAdminPin = document.getElementById('setting-admin-pin'), btnSaveSettings = document.getElementById('btn-save-settings');
+
+        btnSettings.addEventListener('click', () => {
             settingPasscode.value = currentGroupPasscode;
             pendingWallpaperBase64 = currentWallpaper;
             settingAdminPin.value = "";
-            
-            if (pendingWallpaperBase64) {
-                settingWallpaperPreview.src = pendingWallpaperBase64;
-                settingWallpaperPreview.classList.remove('hidden');
-            } else {
-                settingWallpaperPreview.classList.add('hidden');
-            }
+            if (pendingWallpaperBase64) { settingWallpaperPreview.src = pendingWallpaperBase64; settingWallpaperPreview.classList.remove('hidden'); } 
+            else { settingWallpaperPreview.classList.add('hidden'); }
+            settingsModal.classList.remove('hidden'); settingsModal.classList.add('flex');
+            setTimeout(() => { settingsModal.classList.remove('opacity-0'); settingsCard.classList.remove('translate-y-full'); }, 10);
+        });
 
-            settingsModal.classList.remove('hidden');
-            settingsModal.classList.add('flex');
-            setTimeout(() => {
-                settingsModal.classList.remove('opacity-0');
-                settingsCard.classList.remove('translate-y-full');
-            }, 10);
-        }
-
-        function closeSettings() {
-            settingsModal.classList.add('opacity-0');
-            settingsCard.classList.add('translate-y-full');
-            setTimeout(() => {
-                settingsModal.classList.add('hidden');
-                settingsModal.classList.remove('flex');
-            }, 400);
-        }
-
-        btnSettings.addEventListener('click', openSettings);
-        btnCloseSettings.addEventListener('click', closeSettings);
+        btnCloseSettings.addEventListener('click', () => {
+            settingsModal.classList.add('opacity-0'); settingsCard.classList.add('translate-y-full');
+            setTimeout(() => { settingsModal.classList.add('hidden'); settingsModal.classList.remove('flex'); }, 200);
+        });
 
         btnUploadWallpaper.addEventListener('click', () => settingWallpaperFile.click());
         settingWallpaperFile.addEventListener('change', (e) => {
@@ -576,36 +468,29 @@
                 });
             }
         });
+        
         btnClearWallpaper.addEventListener('click', () => {
-            pendingWallpaperBase64 = "";
-            settingWallpaperPreview.src = "";
-            settingWallpaperPreview.classList.add('hidden');
-            settingWallpaperFile.value = "";
+            pendingWallpaperBase64 = ""; settingWallpaperPreview.src = "";
+            settingWallpaperPreview.classList.add('hidden'); settingWallpaperFile.value = "";
         });
 
         btnSaveSettings.addEventListener('click', async () => {
             const pin = settingAdminPin.value.trim();
             const newCode = settingPasscode.value.trim();
-
             if (pin !== ADMIN_PIN) return showToast("PIN Admin salah!", true);
             if (newCode.length < 3) return showToast("Kode minimal 3 karakter.", true);
 
-            btnSaveSettings.innerText = "Menyimpan...";
-            btnSaveSettings.disabled = true;
-
             try {
-                await setDoc(configRef, {
-                    passcode: newCode,
-                    wallpaper: pendingWallpaperBase64 || ""
-                });
-                showToast("Pengaturan berhasil disimpan!");
-                closeSettings();
-            } catch (error) {
-                console.error(error);
-                showToast("Gagal menyimpan ke server.", true);
-            } finally {
-                btnSaveSettings.innerText = 'Simpan Perubahan';
-                btnSaveSettings.disabled = false;
+                if (db) {
+                    await setDoc(doc(db, 'rt05_settings', 'config'), {
+                        passcode: newCode,
+                        wallpaper: pendingWallpaperBase64 || ""
+                    }, { merge: true });
+                    showToast("Pengaturan disinkronkan ke Cloud!");
+                }
+                btnCloseSettings();
+            } catch (err) {
+                showToast("Gagal menyimpan ke Cloud.", true);
             }
         });
     </script>
